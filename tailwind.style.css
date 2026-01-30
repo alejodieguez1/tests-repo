@@ -157,13 +157,6 @@ site-header .site-header.active .menu-toggle span {
   @apply -translate-y-[0.85rem] text-xs;
 }
 
-/* Carousel Pagers */
-
-.pager button.active,
-carousel-pager button.active {
-  @apply bg-grass transition-opacity duration-300;
-}
-
 /* Accordions */
 
 details > summary {
@@ -183,22 +176,45 @@ details[open] > .content {
 }
 
 .swiper-pagination {
-  @apply relative flex justify-center bottom-[unset];
+  @apply !relative flex !bottom-[unset] rounded-md overflow-hidden;
 }
 
-carousel-pager button.active,
-.swiper-pagination .active {
-  @apply opacity-100 w-9 lg:w-14 transition-all duration-200;
+.swiper-pagination .pager {
+  @apply h-1 w-full bg-[#DDD6D7] transition-all duration-200;
+}
+
+.swiper-pagination .pager.active {
+  @apply bg-black transition-all duration-300;
+}
+
+/* Featured Products Carousel alignment */
+
+.featured-products-carousel .swiper {
+  @apply px-4 lg:px-12;
+}
+
+@media screen and (min-width: 1440px) {
+  .featured-products-carousel .swiper {
+    padding-left: calc(((100vw - 1440px) / 2) + 48px);
+    padding-right: calc(((100vw - 1440px) / 2) + 48px);
+  }
 }
 
 /* Custom Margins */
 
+.custom-mr {
+  @apply mr-4 lg:mr-12;
+}
+.custom-ml {
+  @apply ml-4 lg:ml-12;
+}
+
 @media screen and (min-width: 1440px) {
   .custom-mr {
-    margin-right: calc(((100vw - 1440px) / 2)) !important;
+    margin-right: calc(((100vw - 1440px) / 2) + 48px) !important;
   }
   .custom-ml {
-    margin-left: calc(((100vw - 1440px) / 2)) !important;
+    margin-left: calc(((100vw - 1440px) / 2) + 48px) !important;
   }
   .custom-pl {
     padding-left: calc(((100vw - 1440px) / 2)) !important;

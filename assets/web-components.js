@@ -128,7 +128,7 @@ class CarouselPager extends HTMLElement {
           carousel.slideTo(i);
         } else {
           console.error(
-            "<carousel-pager> needs to be a child of <site-carousel>"
+            "<carousel-pager> needs to be a child of <site-carousel>",
           );
         }
       });
@@ -160,8 +160,7 @@ class SiteCarousel extends HTMLElement {
       pagination: {
         el: this.querySelector(".swiper-pagination"),
         clickable: true,
-        bulletClass:
-          "w-2 h-2 bg-black rounded-full opacity-20 transition-all duration-200",
+        bulletClass: "pager",
         bulletActiveClass: "active",
       },
     });
@@ -444,7 +443,7 @@ class UpdateQuantity extends HTMLElement {
         if (cart) {
           await cart.updateQuantity(idx, nextVal);
         }
-      }, 300)
+      }, 300),
     );
   }
 }
@@ -483,7 +482,7 @@ class NumberInput extends HTMLElement {
     this.changeEvent = new Event("change", { bubbles: true });
 
     this.querySelectorAll("button").forEach((button) =>
-      button.addEventListener("click", this.onButtonClick.bind(this))
+      button.addEventListener("click", this.onButtonClick.bind(this)),
     );
   }
 
@@ -577,7 +576,7 @@ class SiteCart extends HTMLElement {
       if (elToReplace) {
         const html = this.getSectionInnerHTML(
           sections[sectionKey],
-          activeSection.selector
+          activeSection.selector,
         );
         elToReplace.innerHTML = html;
       }
@@ -731,3 +730,70 @@ class CountdownTimer extends HTMLElement {
 }
 
 customElements.define("countdown-timer", CountdownTimer);
+
+class FeaturedProductsMobile extends HTMLElement {
+  constructor() {
+    super();
+    this.extra = null;
+    this.toggle = null;
+    this.label = null;
+    this.onToggleClick = this.onToggleClick.bind(this);
+    this.onTransitionEnd = this.onTransitionEnd.bind(this);
+  }
+
+  connectedCallback() {
+    this.extra = this.querySelector("[data-fp-extra]");
+    this.toggle = this.querySelector("[data-fp-toggle]");
+    this.label = this.querySelector("[data-fp-toggle-label]");
+
+    if (!this.extra || !this.toggle || !this.label) return;
+
+    this.classList.remove("is-open");
+    this.label.textContent = "Show More";
+
+    this.toggle.addEventListener("click", this.onToggleClick);
+    this.extra.addEventListener("transitionend", this.onTransitionEnd);
+  }
+
+  disconnectedCallback() {
+    if (this.toggle)
+      this.toggle.removeEventListener("click", this.onToggleClick);
+    if (this.extra)
+      this.extra.removeEventListener("transitionend", this.onTransitionEnd);
+  }
+
+  setOpen(open) {
+    if (!this.extra || !this.toggle || !this.label) return;
+
+    this.classList.toggle("is-open", open);
+    this.label.textContent = open ? "Show Less" : "Show More";
+
+    if (open) {
+      this.extra.style.height = this.extra.scrollHeight + "px";
+    } else {
+      if (this.extra.style.height === "auto")
+        this.extra.style.height = this.extra.scrollHeight + "px";
+      void this.extra.offsetHeight;
+      this.extra.style.height = "0px";
+    }
+  }
+
+  onTransitionEnd(e) {
+    if (e.propertyName !== "height") return;
+    if (this.classList.contains("is-open")) {
+      this.extra.style.height = "auto";
+    }
+  }
+
+  onToggleClick() {
+    const isOpen = this.classList.contains("is-open");
+    if (!isOpen) {
+      this.extra.style.height = "0px";
+      requestAnimationFrame(() => this.setOpen(true));
+    } else {
+      this.setOpen(false);
+    }
+  }
+}
+
+customElements.define("featured-products-mobile", FeaturedProductsMobile);

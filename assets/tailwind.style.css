@@ -671,6 +671,10 @@ html {
   margin-bottom: 2.5rem;
 }
 
+.mb-6 {
+  margin-bottom: 1.5rem;
+}
+
 .mt-1 {
   margin-top: 0.25rem;
 }
@@ -685,6 +689,10 @@ html {
 
 .mt-20 {
   margin-top: 5rem;
+}
+
+.mt-6 {
+  margin-top: 1.5rem;
 }
 
 .block {
@@ -983,6 +991,11 @@ html {
 .border-chocolate {
   --tw-border-opacity: 1;
   border-color: rgb(188 171 153 / var(--tw-border-opacity, 1));
+}
+
+.bg-\[\#1C1D1D\] {
+  --tw-bg-opacity: 1;
+  background-color: rgb(28 29 29 / var(--tw-bg-opacity, 1));
 }
 
 .bg-\[\#818308\] {
@@ -1845,17 +1858,6 @@ site-header .site-header.active .menu-toggle span {
   line-height: 1rem;
 }
 
-/* Carousel Pagers */
-
-.pager button.active,
-carousel-pager button.active {
-  --tw-bg-opacity: 1;
-  background-color: rgb(187 190 169 / var(--tw-bg-opacity, 1));
-  transition-property: opacity;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  transition-duration: 300ms;
-}
-
 /* Accordions */
 
 details > summary {
@@ -1882,37 +1884,120 @@ details[open] > .content {
 }
 
 .swiper-pagination {
-  position: relative;
-  bottom: unset;
+  position: relative !important;
+  bottom: unset !important;
   display: flex;
-  justify-content: center;
+  overflow: hidden;
+  border-radius: 0.375rem;
 }
 
-carousel-pager button.active,
-.swiper-pagination .active {
-  width: 2.25rem;
-  opacity: 1;
+.swiper-pagination .pager {
+  height: 0.25rem;
+  width: 100%;
+  --tw-bg-opacity: 1;
+  background-color: rgb(221 214 215 / var(--tw-bg-opacity, 1));
   transition-property: all;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   transition-duration: 200ms;
 }
 
+.swiper-pagination .pager.active {
+  --tw-bg-opacity: 1;
+  background-color: rgb(0 0 0 / var(--tw-bg-opacity, 1));
+  transition-property: all;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 300ms;
+}
+
+/* Featured Products Carousel alignment */
+
+.featured-products-carousel .swiper {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
 @media (min-width: 1024px) {
-  carousel-pager button.active,
-.swiper-pagination .active {
-    width: 3.5rem;
+  .featured-products-carousel .swiper {
+    padding-left: 3rem;
+    padding-right: 3rem;
   }
+}
+
+@media screen and (min-width: 1440px) {
+  .featured-products-carousel .swiper {
+    padding-left: calc(((100vw - 1440px) / 2) + 48px);
+    padding-right: calc(((100vw - 1440px) / 2) + 48px);
+  }
+}
+
+/* Featured Products Scrollbar */
+
+.featured-products-scrollbar {
+  height: 4px !important;
+  border-radius: 6px !important;
+  background: rgba(0, 0, 0, 0.2) !important;
+  margin: 24px 16px 0;
+  transition: height 200ms ease;
+}
+
+@media screen and (min-width: 1024px) {
+  .featured-products-scrollbar {
+    margin-left: 48px;
+    margin-right: 48px;
+  }
+}
+
+@media screen and (min-width: 1440px) {
+  .featured-products-scrollbar {
+    margin-left: calc(((100vw - 1440px) / 2) + 48px);
+    margin-right: calc(((100vw - 1440px) / 2) + 48px);
+  }
+}
+
+.featured-products-scrollbar .swiper-scrollbar-drag {
+  height: 4px !important;
+  border-radius: 6px !important;
+  background: rgba(0, 0, 0, 0.9) !important;
+  transition: height 200ms ease, opacity 200ms ease;
+}
+
+.featured-products-scrollbar:hover {
+  height: 6px !important;
+}
+
+.featured-products-scrollbar:hover .swiper-scrollbar-drag {
+  height: 6px !important;
 }
 
 /* Custom Margins */
 
+.custom-mr {
+  margin-right: 1rem;
+}
+
+@media (min-width: 1024px) {
+  .custom-mr {
+    margin-right: 3rem;
+  }
+}
+
+.custom-ml {
+  margin-left: 1rem;
+}
+
+@media (min-width: 1024px) {
+  .custom-ml {
+    margin-left: 3rem;
+  }
+}
+
 @media screen and (min-width: 1440px) {
   .custom-mr {
-    margin-right: calc(((100vw - 1440px) / 2)) !important;
+    margin-right: calc(((100vw - 1440px) / 2) + 48px) !important;
   }
 
   .custom-ml {
-    margin-left: calc(((100vw - 1440px) / 2)) !important;
+    margin-left: calc(((100vw - 1440px) / 2) + 48px) !important;
   }
 
   .custom-pl {
@@ -2039,6 +2124,10 @@ carousel-pager button.active,
     margin-bottom: 4rem;
   }
 
+  .lg\:mb-8 {
+    margin-bottom: 2rem;
+  }
+
   .lg\:mt-16 {
     margin-top: 4rem;
   }
@@ -2088,10 +2177,6 @@ carousel-pager button.active,
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
-  .lg\:grid-cols-4 {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
-
   .lg\:grid-cols-\[0\.75fr_1fr\] {
     grid-template-columns: 0.75fr 1fr;
   }
@@ -2106,10 +2191,6 @@ carousel-pager button.active,
 
   .lg\:gap-0 {
     gap: 0px;
-  }
-
-  .lg\:gap-10 {
-    gap: 2.5rem;
   }
 
   .lg\:gap-12 {
