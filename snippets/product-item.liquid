@@ -1,50 +1,22 @@
-<div class="grid rounded-xl overflow-hidden relative bg-[#dddddd] shadow-lg pt-4">
-  <a href="{{ product.url }}" class="relative aspect-[0.8]">
+{% liquid
+  assign featured_tag = product.metafields.custom.featured_tag
+  assign discount_tag = product.metafields.custom.discount_tag
+%}
+
+<div class="grid content-start gap-3">
+  <a href="{{ product.url }}" class="relative aspect-square overflow-hidden rounded-[0.625rem]">
     {% render 'media-component'
       , desktop_image: product.featured_image
       , mobile_image: product.featured_image %}
+    {% unless featured_tag == blank %}
+      <div></div>
+    {% endunless %}
+    {% unless discount_tag == blank %}
+      <div></div>
+    {% endunless %}
   </a>
-  <div class="p-4 grid gap-5 bg-white rounded-xl overflow-hidden z-10">
-    <div class="grid">
-      <a href="{{ product.url }}" class="h5">{{ product.title }}</a>
-      <div class="flex">
-        <div class="flex gap-2">
-          <span>{{ product.price | money_without_trailing_zeros }}</span>
-        </div>
-      </div>
-    </div>
-    {% if product.selected_or_first_available_variant.available %}
-      <cart-add data-variant-id="{{ product.selected_or_first_available_variant.id }}" class="flex gap-2">
-        <product-quantity-selector class="flex items-center justify-between px-2 rounded-md border border-dark-gray">
-          <button class="quantity-minus-js h-full">
-            {% render 'icon-minus' %}
-          </button>
-          <p class="px-2 lg:px-2.5 text-sm quantity-js relative top-[1px]">1</p>
-          <button class="quantity-plus-js h-full">
-            {% render 'icon-plus' %}
-          </button>
-        </product-quantity-selector>
-        <form class="w-full">
-          <input
-            type="hidden"
-            name="id"
-            value="{{ product.selected_or_first_available_variant.id }}">
-          <input
-            type="hidden"
-            name="selling_plan"
-            value="{{ product.selling_plan_groups[0].selling_plans[0].id }}">
-          {% assign button_text = "Add to cart" %}
-          {% render 'button'
-            , button_text: button_text
-            , button_class: "grass"
-            , custom_class: '!w-full !px-5 sm:!px-5 lg:!px-5 !rounded-md'
-            , no_arrow: true %}
-        </form>
-      </cart-add>
-    {% else %}
-      {% render 'button'
-        , button_text: "Sin stock"
-        , button_class: "grass" %}
-    {% endif %}
+  <div class="grid content-start gap-2">
+    <a href="{{ product.url }}" class="text-base lg:text-lg uppercase font-bebas">{{ product.title }}</a>
+    <span class="text-base font-poppins-md">{{ product.price | money_without_trailing_zeros }}</span>
   </div>
 </div>

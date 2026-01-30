@@ -1,17 +1,13 @@
 {% assign settings = section.settings %}
 
 <site-header>
-  <div class="fixed z-50 left-0 right-0">
-    {% unless section.settings.announcement_text == blank %}
-      {% render 'announcement-bar'
-        , text: settings.announcement_text %}
-    {% endunless %}
-    <div class="site-header lg:py-10 flex items-center py-7 transition-all duration-500 text-white">
+  <div class="">
+    <div class="site-header lg:py-10 flex items-center py-7 transition-all duration-500 text-black">
       <div class="site-container flex justify-between relative items-center">
         <div class="lg:hidden">
           <button class="menu-toggle group grid gap-1 content-center h-full">
-            <span class="bg-white w-10 h-[2px] flex transform transition duration-500 origin-center group-[.active]:rotate-45 group-[.active]:translate-y-[0.15rem]"></span>
-            <span class="bg-white w-10 h-[2px] flex transform transition duration-500 origin-center group-[.active]:-rotate-45 group-[.active]:-translate-y-[0.25rem]"></span>
+            <span class="bg-black w-10 h-[2px] flex transform transition duration-500 origin-center group-[.active]:rotate-45 group-[.active]:translate-y-[0.15rem]"></span>
+            <span class="bg-black w-10 h-[2px] flex transform transition duration-500 origin-center group-[.active]:-rotate-45 group-[.active]:-translate-y-[0.25rem]"></span>
           </button>
         </div>
         <div class="items-center gap-6 hidden lg:flex">
@@ -28,7 +24,7 @@
             class="block"
             aria-label="Logo">
             <span class="sr-only">Shop Logo</span>
-            {% render 'logo' %}</a>
+            Logo</a>
         </div>
         <button class="lg:hover:opacity-50 lg:transition-all lg:duration-500">{% render 'icon-cart' %}</button>
       </div>
@@ -47,11 +43,6 @@
     "tag": "header",
     "settings": [
       {
-        "type": "text",
-        "id": "announcement_text",
-        "label": "Announcement Bar Text"
-      },
-      {
         "type": "link_list",
         "id": "menu",
         "label": "Links de navegación"
@@ -65,7 +56,8 @@
         "type": "url",
         "id": "ig_url",
         "label": "Link Instagram"
-      }, {
+      },
+      {
         "type": "url",
         "id": "fb_url",
         "label": "Link Facebook"
@@ -79,11 +71,7 @@
       {
         "name": "Cabecera",
         "settings": {
-          "menu": "header-menu",
-          "wp_url": "#",
-          "ig_url": "https://www.instagram.com/pasaje69/",
-          "fb_url": "https://www.facebook.com/profile.php?id=100075638299581",
-          "tk_url": "https://www.tiktok.com/@pasaje69home"
+          "menu": "header-menu"
         }
       }
     ]

@@ -9,143 +9,89 @@
  */
 {
   "sections": {
-    "hero_ywXn9V": {
-      "type": "hero",
-      "settings": {
-        "bg_mobile": "shopify://shop_images/Main_one_11zon.webp",
-        "bg_desktop": "shopify://shop_images/Main_one_11zon.webp",
-        "text_color": "#ffffff",
-        "title": "<p>Buy and win this Volkswagen Camper Van + 20k Cash + DJI Mini 4 Pro Drone</p>",
-        "description": "Dreaming of the ultimate road trip? Now's your change to own an iconic vintage adventure van!",
-        "cta_text": "Get Entries",
-        "cta_url": "shopify://collections",
-        "start_year": 2025,
-        "start_month": 7,
-        "start_day": 1,
-        "start_hours": 0,
-        "start_minute": 0
-      }
-    },
     "featured_products_LEUHp4": {
       "type": "featured-products",
       "blocks": {
-        "product_K9TWtE": {
+        "product_PJVNJX": {
           "type": "product",
           "settings": {
-            "product": "bronze-easy-entry"
+            "product": "selling-plans-ski-wax"
           }
         },
-        "product_mRty6z": {
+        "product_JtEH8Q": {
           "type": "product",
           "settings": {
-            "product": "silver-easy-entry"
+            "product": "the-collection-snowboard-hydrogen"
           }
         },
-        "product_piD4PK": {
+        "product_gV77gB": {
           "type": "product",
           "settings": {
-            "product": "gold-easy-entry"
+            "product": "the-collection-snowboard-liquid"
           }
         },
-        "product_PJXzzK": {
+        "product_TGQbHF": {
           "type": "product",
           "settings": {
-            "product": "platinum-easy-entry"
+            "product": "the-compare-at-price-snowboard"
+          }
+        },
+        "product_XEtxWw": {
+          "type": "product",
+          "settings": {
+            "product": "the-inventory-not-tracked-snowboard"
+          }
+        },
+        "product_LdNE3c": {
+          "type": "product",
+          "settings": {
+            "product": "the-videographer-snowboard"
+          }
+        },
+        "product_YgGwAV": {
+          "type": "product",
+          "settings": {
+            "product": "the-out-of-stock-snowboard"
+          }
+        },
+        "product_J67FJL": {
+          "type": "product",
+          "settings": {
+            "product": "the-multi-managed-snowboard"
+          }
+        },
+        "product_KedWwE": {
+          "type": "product",
+          "settings": {
+            "product": "the-multi-location-snowboard"
+          }
+        },
+        "product_dakptX": {
+          "type": "product",
+          "settings": {
+            "product": "the-inventory-not-tracked-snowboard"
           }
         }
       },
       "block_order": [
-        "product_K9TWtE",
-        "product_mRty6z",
-        "product_piD4PK",
-        "product_PJXzzK"
+        "product_PJVNJX",
+        "product_JtEH8Q",
+        "product_gV77gB",
+        "product_TGQbHF",
+        "product_XEtxWw",
+        "product_LdNE3c",
+        "product_YgGwAV",
+        "product_J67FJL",
+        "product_KedWwE",
+        "product_dakptX"
       ],
       "name": "Easy Entries",
       "settings": {
-        "title": "<p>Want some easy entries?</p>",
-        "description": "Buy them in the easiest way possible and get more chances to win!",
+        "title": "<p>Best Sellers</p>",
         "button_text": "Shop All",
         "button_url": "shopify://collections"
       }
-    },
-    "fifty_fifty_hi7bnt": {
-      "type": "fifty-fifty",
-      "name": "Fifty Fifty",
-      "settings": {
-        "color_scheme": "cloud",
-        "content_position": false,
-        "content_alignment": "middle",
-        "title": "<p>About Van Life</p>",
-        "description": "<p>Vanlife US is ran by a small team located across the US. There's nothing more freeing than being out on the road and that's why we want to give someone the chance to win a restored  1978 Volkswagen Westfalia Camper Van. And to add some sugar... $20k cash to enjoy her.</p><p></p><p>We also deeply care about the environment, especially with what's happening in the world at the moment. That's why a portion of all sales goes to support Conservation Northwest. Read more about what they're doing below.</p><p></p><p>If you wanna say hi, chuck us a message on socials! </p><p></p><p>Goodluck! - Mak and the Vanlife team</p>",
-        "button_text": "Check more",
-        "button_url": "#",
-        "image": "shopify://shop_images/IMG_8104.webp"
-      }
-    },
-    "reviews_TLXj8L": {
-      "type": "reviews",
-      "blocks": {
-        "review_rYqLay": {
-          "type": "review",
-          "settings": {
-            "customer": "Brandon Morton",
-            "review": "My girlfriend bought me a shirt from these guys, and I absolutely love it! Fits well(which is usually my biggest problem since I’m built slightly different than most), and the graphic is really classic/kind of vintage looking. Makes me feel like I should already be driving that incredible VW bus they have for their giveaway, in some 70’s style shorts and a headband with aviators on.",
-            "image": "shopify://shop_images/unnamed.png"
-          }
-        },
-        "review_KW6aLD": {
-          "type": "review",
-          "settings": {
-            "customer": "Mariah Lucero",
-            "review": "Absolutely love everything I got from Vanlife! I grabbed a few of the retro sticker packs along with some raffle bundles (fingers crossed on that van 👀), and I’m seriously impressed.",
-            "image": "shopify://shop_images/2222222.png"
-          }
-        },
-        "review_dkXWpd": {
-          "type": "review",
-          "settings": {
-            "customer": "Kelly Gadomski",
-            "review": "Love what this company is doing and what it stands for!",
-            "image": "shopify://shop_images/2222.png"
-          }
-        },
-        "review_BAWyp6": {
-          "type": "review",
-          "settings": {
-            "customer": "Barry Arthur",
-            "review": "Very nice business.  Protecting wildlands and wildlife is a great mission!",
-            "image": "shopify://shop_images/w2222.png"
-          }
-        },
-        "review_wVDWAW": {
-          "type": "review",
-          "settings": {
-            "customer": "Kirsten Grant",
-            "review": "Love the products and their style!!!",
-            "image": "shopify://shop_images/44444.png"
-          }
-        }
-      },
-      "block_order": [
-        "review_rYqLay",
-        "review_KW6aLD",
-        "review_dkXWpd",
-        "review_BAWyp6",
-        "review_wVDWAW"
-      ],
-      "name": "Reviews Carousel",
-      "settings": {
-        "title": "<p>What customers say about us</p>",
-        "description": "Take a look into our customer reviews",
-        "button_text": "",
-        "button_url": ""
-      }
     }
   },
-  "order": [
-    "hero_ywXn9V",
-    "featured_products_LEUHp4",
-    "fifty_fifty_hi7bnt",
-    "reviews_TLXj8L"
-  ]
+  "order": ["featured_products_LEUHp4"]
 }

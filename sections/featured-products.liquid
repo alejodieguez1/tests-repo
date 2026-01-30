@@ -1,26 +1,66 @@
-{% assign settings = section.settings %}
-
+{% liquid
+  assign settings = section.settings
+  assign title = settings.title
+  assign description = settings.description
+  assign button_text = settings.button_text
+  assign button_url = settings.button_url
+  assign carousel_config = '{"slidesPerView": 4, "spaceBetween": 24, "loop": false, "breakpoints": {"1024": {"slidesPerView": 4, "spaceBetween": 24}, "1280": {"slidesPerView": 5, "spaceBetween": 24}}}'
+%}
 
 <div class="py-10 lg:py-20 px-4 md:px-0 bg-[#f4f3f1]">
-  <div class="site-container grid content-start gap-10">
+  <div class="site-container grid content-start gap-6 lg:gap-10">
     <div class="grid content-start gap-2">
-      <h2 class="h2">{{ settings.title }}</h2>
-      {% if settings.description %}
-        <p class="text-lg mt-2">{{ settings.description }}</p>
-      {% endif %}
+      <h2 class="text-[1.75rem] lg:text-4xl font-heading font-bold lg:font-extrabold">{{ title }}</h2>
+      {% unless description == blank %}
+        <p class="text-lg mt-2">{{ description }}</p>
+      {% endunless %}
     </div>
-    <div class="grid content-start gap-5 md:grid-cols-2 lg:grid-cols-4">
-      {% for block in section.blocks %}
+    <div class="grid content-start gap-[0.625rem] gap-y-7 grid-cols-2 lg:hidden">
+      {% for block in section.blocks limit: 4 %}
         {% if block.type == "product" %}
           {% render 'product-item'
             , product: block.settings.product %}
         {% endif %}
       {% endfor %}
     </div>
-    {% unless settings.button_text == blank or settings.button_url == blank %}
+    {% if section.blocks.size > 4 %}
+      <details class="lg:hidden">
+        <summary class="mx-auto w-48 h-14 p-1 relative group bg-[#818308] text-white rounded-full overflow-hidden cursor-pointer list-none">
+          <span class="rounded-full w-full h-full flex items-center justify-center relative z-10 uppercase text-sm">Show More</span>
+          <span class="bg-[#989b0b] absolute w-full h-full top-0 left-0 right-0 z-[5] transform translate-y-[100%] transition-all duration-500"></span>
+        </summary>
+        <div class="mt-6 grid content-start gap-[0.625rem] gap-y-7 grid-cols-2">
+          {% for block in section.blocks offset: 4 %}
+            {% if block.type == "product" %}
+              {% render 'product-item'
+                , product: block.settings.product %}
+            {% endif %}
+          {% endfor %}
+        </div>
+      </details>
+    {% endif %}
+    <site-carousel
+      class="hidden lg:block"
+      data-config="{{ carousel_config | escape }}"
+      id="{{ section.id }}"
+      data-id="{{ section.id }}">
+      <div class="swiper">
+        <div class="swiper-wrapper">
+          {% for block in section.blocks %}
+            {% if block.type == "product" %}
+              <div class="swiper-slide">
+                {% render 'product-item'
+                  , product: block.settings.product %}
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+    </site-carousel>
+    {% unless button_text == blank or button_url == blank %}
       {% render 'button'
-        , button_text: settings.button_text
-        , button_url: settings.button_url
+        , button_text: button_text
+        , button_url: button_url
         , button_class: 'grass'
         , custom_class: 'mx-auto' %}
     {% endunless %}
@@ -29,7 +69,7 @@
 
 {% schema %}
   {
-    "name": "Easy Entries",
+    "name": "Featured Products",
     "tag": "section",
     "settings": [
       {
@@ -67,10 +107,9 @@
     ],
     "presets": [
       {
-        "name": "Easy Entries",
+        "name": "Featured Products",
         "settings": {
-          "title": "<p>Want some easy entries?</p>",
-          "description": "Buy them in the easiest way possible and get more chances to win!",
+          "title": "<p>Best Sellers</p>",
           "button_text": "Shop All",
           "button_url": "shopify://collections"
         },

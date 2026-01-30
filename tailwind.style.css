@@ -56,6 +56,7 @@ input[type="search"]::-webkit-search-results-decoration {
 .h5 {
   @apply text-xl lg:text-2xl leading-[100%] font-body-bold;
 }
+
 .hero-h1 {
   @apply text-4xl lg:text-6xl !leading-[1.1] font-body-bold;
 }

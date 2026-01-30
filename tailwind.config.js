@@ -6,10 +6,14 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        body: "Mori Regular",
+        body: "Poppins",
         "body-bold": "Mori Semibold",
-        heading: "Editorial",
+        heading: "Source",
         rod: "Rod",
+        bebas: "Bebas Neue",
+        poppins: "Poppins",
+        source: "Source",
+        "poppins-md": "Poppins Md",
       },
       colors: {
         gold: "#FFBD17",
