@@ -8,6 +8,5 @@ For the product item cards, I used metafields to drive the **discount label** an
 
 You’ll notice the repo has more files than strictly necessary for this exercise. I pulled this from my other projects to move faster, so a couple areas could use a bit of polishing/cleanup — but everything is working well, and I think the result stays really loyal to the original designs.
 
+[Store URL](https://alejos-test-store-2.myshopify.com/)
 Password is: taotwe
-
-[URL is](https://alejos-test-store-2.myshopify.com/)
