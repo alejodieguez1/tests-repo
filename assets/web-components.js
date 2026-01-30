@@ -146,6 +146,9 @@ class SiteCarousel extends HTMLElement {
   constructor() {
     super();
     this.swiper = null;
+    this._progressUpdate = null;
+    this._progressWindowResize = null;
+    this._progressDragCleanup = null;
   }
 
   connectedCallback() {
@@ -155,18 +158,67 @@ class SiteCarousel extends HTMLElement {
 
     let config = { ...rawConfig };
 
-    this.swiper = new Swiper(`#${this.dataset.id} .swiper`, {
-      ...config,
-      pagination: {
-        el: this.querySelector(".swiper-pagination"),
-        clickable: true,
-        bulletClass: "pager",
-        bulletActiveClass: "active",
-      },
-    });
-    this.handleSlideChange();
-    this.updateNavButtons();
+    const paginationEl = this.querySelector(".swiper-pagination");
+    const trackEl = this.querySelector("[data-carousel-track]");
+    const thumbEl = this.querySelector("[data-carousel-thumb]");
+    const hasNavEls = this.querySelector("carousel-prev button, carousel-next button");
+    const hasPagerEls = this.querySelector("carousel-pager");
+
+    const isEnabled = (attrName, fallback) => {
+      const val = this.getAttribute(attrName);
+      if (val === null) return fallback;
+      return val === "true";
+    };
+
+    const enablePagination = isEnabled("data-enable-pagination", !!paginationEl);
+    const enableNav = isEnabled("data-enable-nav", !!hasNavEls);
+    const enablePager = isEnabled("data-enable-pager", !!hasPagerEls);
+    const enableProgress = isEnabled(
+      "data-enable-progress",
+      !!(trackEl && thumbEl),
+    );
+    const enableProgressDrag = isEnabled("data-enable-progress-drag", false);
+
+    if (enablePagination && paginationEl) {
+      const paginationConfig =
+        typeof config.pagination === "object" ? config.pagination : {};
+      config.pagination = {
+        ...paginationConfig,
+        el: paginationEl,
+        clickable:
+          typeof paginationConfig.clickable === "boolean"
+            ? paginationConfig.clickable
+            : true,
+        bulletClass: paginationConfig.bulletClass || "pager",
+        bulletActiveClass: paginationConfig.bulletActiveClass || "active",
+      };
+    } else {
+      delete config.pagination;
+    }
+
+    this.swiper = new Swiper(`#${this.dataset.id} .swiper`, config);
+
+    if (enablePager) this.handleSlideChange();
+    if (enableNav) this.updateNavButtons();
+    if (enableProgress) this.setupProgressBar({ enableDrag: enableProgressDrag });
+
     this.classList.remove("opacity-0");
+  }
+
+  disconnectedCallback() {
+    if (!this.swiper) return;
+    if (this._progressUpdate) {
+      this.swiper.off("slideChange", this._progressUpdate);
+      this.swiper.off("setTranslate", this._progressUpdate);
+      this.swiper.off("resize", this._progressUpdate);
+    }
+    if (this._progressWindowResize) {
+      window.removeEventListener("resize", this._progressWindowResize);
+    }
+    if (this._progressDragCleanup) {
+      this._progressDragCleanup();
+      this._progressDragCleanup = null;
+    }
   }
 
   previous() {
@@ -187,6 +239,86 @@ class SiteCarousel extends HTMLElement {
     }
   }
 
+  setupProgressBar({ enableDrag = false } = {}) {
+    const track = this.querySelector("[data-carousel-track]");
+    const thumb = this.querySelector("[data-carousel-thumb]");
+    if (!this.swiper || !track || !thumb) return;
+
+    const clamp01 = (n) => Math.max(0, Math.min(1, n));
+
+    const getMetrics = () => {
+      const trackW = track.clientWidth;
+      const total = this.swiper.slides.length;
+
+      let spv = this.swiper.params.slidesPerView;
+      if (spv === "auto") spv = this.swiper.slidesPerViewDynamic();
+      spv = Number(spv) || 1;
+
+      return { trackW, total, spv };
+    };
+
+    const update = () => {
+      const { trackW, total, spv } = getMetrics();
+      const thumbW = Math.max(24, trackW * Math.min(1, spv / total));
+      thumb.style.width = `${thumbW}px`;
+
+      const maxX = Math.max(0, trackW - thumbW);
+      const minT = this.swiper.minTranslate ? this.swiper.minTranslate() : 0;
+      const maxT = this.swiper.maxTranslate ? this.swiper.maxTranslate() : 0;
+      const denom = maxT - minT;
+      const progress =
+        denom === 0 ? 0 : clamp01((this.swiper.translate - minT) / denom);
+      const x = maxX * progress;
+
+      thumb.style.transform = `translate3d(${x}px,0,0)`;
+    };
+
+    this._progressUpdate = update;
+    this._progressWindowResize = update;
+
+    update();
+    this.swiper.on("slideChange", update);
+    this.swiper.on("setTranslate", update);
+    this.swiper.on("progress", update);
+    this.swiper.on("touchMove", update);
+    this.swiper.on("resize", update);
+    window.addEventListener("resize", update);
+
+    if (enableDrag) {
+      let dragging = false;
+      const onPointerDown = (e) => {
+        if (!this.swiper) return;
+        dragging = true;
+        track.setPointerCapture?.(e.pointerId);
+        onPointerMove(e);
+      };
+      const onPointerMove = (e) => {
+        if (!dragging || !this.swiper) return;
+        const { trackW, total, spv } = getMetrics();
+        const maxIndex = Math.max(0, total - Math.ceil(spv));
+        if (maxIndex === 0 || trackW <= 0) return;
+
+        const rect = track.getBoundingClientRect();
+        const p = clamp01((e.clientX - rect.left) / trackW);
+        const idx = Math.round(p * maxIndex);
+        this.swiper.slideTo(idx, 0);
+      };
+      const onPointerUp = () => {
+        dragging = false;
+      };
+
+      track.addEventListener("pointerdown", onPointerDown);
+      window.addEventListener("pointermove", onPointerMove);
+      window.addEventListener("pointerup", onPointerUp);
+
+      this._progressDragCleanup = () => {
+        track.removeEventListener("pointerdown", onPointerDown);
+        window.removeEventListener("pointermove", onPointerMove);
+        window.removeEventListener("pointerup", onPointerUp);
+      };
+    }
+  }
+
   handleSlideChange() {
     const pagers = Array.from(this.querySelectorAll("carousel-pager"));
 
@@ -197,7 +329,7 @@ class SiteCarousel extends HTMLElement {
           const nextPager = buttons[this.swiper.realIndex];
 
           buttons.forEach((button) => button.classList.remove("active"));
-          nextPager.classList.add("active");
+          if (nextPager) nextPager.classList.add("active");
         });
 
         this.updateNavButtons();

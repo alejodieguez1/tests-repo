@@ -1,22 +1,43 @@
 {% liquid
   assign featured_tag = product.metafields.custom.featured_tag
   assign discount_tag = product.metafields.custom.discount_tag
+  assign custom_class = ''
+  if product.media.size > 1
+    assign custom_class = 'lg:group-hover:opacity-0 transition-all duration-300'
+  else
+    assign custom_class = ''
+  endif
 %}
 
 <div class="grid content-start gap-3">
-  <a href="{{ product.url }}" class="relative aspect-square overflow-hidden rounded-[0.625rem]">
+  <a href="{{ product.url }}" class="relative aspect-square overflow-hidden rounded-[0.625rem] group">
     {% render 'media-component'
       , desktop_image: product.featured_image
-      , mobile_image: product.featured_image %}
+      , mobile_image: product.featured_image
+      , custom_class: custom_class %}
+    {% if product.media.size > 1 %}
+      {% render 'media-component'
+        , desktop_image: product.media[1]
+        , mobile_image: product.media[1]
+        , custom_class: 'opacity-0 lg:group-hover:opacity-100 transition-all duration-300' %}
+    {% endif %}
     {% unless featured_tag == blank %}
-      <div></div>
+      <div class="rounded-full py-1 px-2 flex items-center justify-center border border-black bg-white text-black absolute top-[6px] left-[6px] z-10 text-[0.625rem] lg:text-xs uppercase font-bebas tracking-wide">{{ featured_tag }}</div>
     {% endunless %}
     {% unless discount_tag == blank %}
-      <div></div>
+      <div class="rounded-full py-1 px-2 flex items-center justify-center border border-black bg-[#5C7962] text-white absolute top-[6px] right-[6px] z-10 text-[0.625rem] lg:text-xs uppercase font-bebas tracking-wide">{{ discount_tag }}</div>
     {% endunless %}
   </a>
   <div class="grid content-start gap-2">
     <a href="{{ product.url }}" class="text-base lg:text-lg uppercase font-bebas">{{ product.title }}</a>
+    <div class="flex items-center gap-1">
+      <div class="flex items-center">
+        {% for item in (1..5) %}
+          <div class="w-3 h-3">{% render 'icon-star' %}</div>
+        {% endfor %}
+      </div>
+      <p class="text-xs">1,234 Reviews</p>
+    </div>
     <span class="text-base font-poppins-md">{{ product.price | money_without_trailing_zeros }}</span>
   </div>
 </div>

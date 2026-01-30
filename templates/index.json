@@ -88,7 +88,7 @@
       "name": "Easy Entries",
       "settings": {
         "title": "<p>Best Sellers</p>",
-        "button_text": "Shop All",
+        "button_text": "Shop All Best Sellers",
         "button_url": "shopify://collections"
       }
     }

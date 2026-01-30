@@ -3,51 +3,66 @@
   assign title = settings.title
   assign description = settings.description
   assign carousel_config = '{"slidesPerView": 4.5, "spaceBetween": 24, "loop": false, "breakpoints": {"1024": {"slidesPerView": 3.8, "spaceBetween": 24}}}'
+  assign button_text = settings.button_text
+  assign button_url = settings.button_url
 %}
 
-<div class="py-10 lg:py-20 px-4 md:px-0 bg-[#f4f3f1]">
+<div class="py-10 lg:py-20 bg-[#f4f3f1]">
   <div>
-    <div class="grid content-start gap-2 site-container mb-6 lg:mb-8">
-      <h2 class="text-[1.75rem] lg:text-4xl font-heading font-bold lg:font-extrabold">{{ title }}</h2>
-      {% unless description == blank %}
-        <p class="text-lg mt-2">{{ description }}</p>
-      {% endunless %}
-    </div>
-    <featured-products-mobile class="lg:hidden">
-      <div class="grid content-start gap-[0.625rem] gap-y-7 grid-cols-2">
-        {% for block in section.blocks limit: 4 %}
-          {% if block.type == "product" %}
-            {% render 'product-item'
-              , product: block.settings.product %}
-          {% endif %}
-        {% endfor %}
-      </div>
-
-      {% if section.blocks.size > 4 %}
-        <div
-          class="mt-6"
-          data-fp-extra
-          style="height: 0px; overflow: hidden; transition: height 450ms ease; will-change: height;">
-          <div class="grid content-start gap-[0.625rem] gap-y-7 grid-cols-2">
-            {% for block in section.blocks offset: 4 %}
-              {% if block.type == "product" %}
-                {% render 'product-item'
-                  , product: block.settings.product %}
-              {% endif %}
-            {% endfor %}
-          </div>
+    <div class="site-container">
+      <div class="grid content-start lg:flex lg:justify-between gap-2 mb-6 lg:mb-8">
+        <div class="content-start gap-2">
+          <h2 class="text-[1.75rem] lg:text-4xl font-heading font-bold lg:font-extrabold text-center lg:text-left">{{ title }}</h2>
+          {% unless description == blank %}
+            <p class="text-lg mt-2">{{ description }}</p>
+          {% endunless %}
         </div>
-
-        <button
-          type="button"
-          data-fp-toggle
-          class="w-full h-14 p-1 bg-[#1C1D1D] text-white rounded-full overflow-hidden mt-6">
-          <span class="rounded-full w-full h-full flex items-center justify-center relative z-10 font-poppins-md" data-fp-toggle-label>Show More</span>
-        </button>
-      {% endif %}
-    </featured-products-mobile>
+        {% unless button_text == blank or button_url == blank %}
+          <div class="hidden lg:flex">
+            <a href="{{ button_url }}" class="flex justify-center text-sm items-center font-poppins-md gap-2 text-[#5C553A] lg:hover:opacity-60 transition-all duration-300">
+              <span>{{ button_text }}</span>
+              {% render 'icon-arrow-right' %}
+            </a>
+          </div>
+        {% endunless %}
+      </div>
+      <featured-products-mobile class="lg:hidden">
+        <div class="grid content-start gap-[0.625rem] gap-y-7 grid-cols-2">
+          {% for block in section.blocks limit: 4 %}
+            {% if block.type == "product" %}
+              {% render 'product-item'
+                , product: block.settings.product %}
+            {% endif %}
+          {% endfor %}
+        </div>
+        {% if section.blocks.size > 4 %}
+          <div
+            class="mt-6"
+            data-fp-extra
+            style="height: 0px; overflow: hidden; transition: height 450ms ease; will-change: height;">
+            <div class="grid content-start gap-[0.625rem] gap-y-7 grid-cols-2">
+              {% for block in section.blocks offset: 4 %}
+                {% if block.type == "product" %}
+                  {% render 'product-item'
+                    , product: block.settings.product %}
+                {% endif %}
+              {% endfor %}
+            </div>
+          </div>
+          <button
+            type="button"
+            data-fp-toggle
+            class="w-full h-14 p-1 bg-[#1C1D1D] text-white rounded-full overflow-hidden mt-6">
+            <span class="rounded-full w-full h-full flex items-center justify-center relative z-10 font-poppins-md" data-fp-toggle-label>Show More</span>
+          </button>
+        {% endif %}
+      </featured-products-mobile>
+    </div>
     <site-carousel
       class="hidden lg:block featured-products-carousel"
+      data-enable-progress="true"
+      data-enable-progress-drag="true"
+      data-enable-pagination="false"
       data-config="{{ carousel_config | escape }}"
       id="{{ section.id }}"
       data-id="{{ section.id }}">
@@ -63,7 +78,11 @@
           {% endfor %}
         </div>
       </div>
-      <div class="swiper-pagination carousel-pager site-container"></div>
+      <div class="site-container mt-8">
+        <div data-carousel-track class="relative h-1 lg:hover:h-[6px] w-full bg-[#d7d3cf] rounded-full overflow-hidden cursor-pointer select-none transition-all duration-300">
+          <div data-carousel-thumb class="absolute top-0 left-0 h-full bg-[#1C1D1D] rounded-full transition-all duration-300"></div>
+        </div>
+      </div>
     </site-carousel>
   </div>
 </div>
