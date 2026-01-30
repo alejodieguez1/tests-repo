@@ -7,3 +7,5 @@ The trickiest part of the build was the product gallery carousel. Swiper doesn�
 For the product item cards, I used metafields to drive the **discount label** and **featured label**. It’s a simple and flexible way to handle those flags, and it gives the “client” an easy place in Shopify to manage that data without touching code.
 
 You’ll notice the repo has more files than strictly necessary for this exercise. I pulled this from my other projects to move faster, so a couple areas could use a bit of polishing/cleanup — but everything is working well, and I think the result stays really loyal to the original designs.
+
+Password is: taotwe
