@@ -1,13 +1,13 @@
-# Shopify Theme Platter Test Project
+# Shopify Theme — Featured Products
 
-This project was built and tested on a Shopify dev store populated with mock products coming directly from Shopify.
+This was built and tested on a Shopify dev store with mock products.
 
-The trickiest part of the build was the product gallery carousel. Swiper doesn’t ship with the exact “thumb slide bar” behavior needed for the designs, so I had to implement that logic myself on top of Swiper to get the thumbnail bar to behave correctly. In case you're using the browser resize function from the DEV Tools and the carousel does not work please quit the dev tools and reload the site(swiper's fault)
+For the product carousel, I went with a custom Web Component that leverages CSS `scroll-snap` for smooth native scrolling and touch support. The progress bar at the bottom tracks the scroll position and supports drag-to-scrub — all plain JavaScript, no libraries.
 
-For the product item cards, I used metafields to drive the **discount label** and **featured label**. It’s a simple and flexible way to handle those flags, and it gives the “client” an easy place in Shopify to manage that data without touching code.
+Product labels (the discount and featured tags) are driven by metafields, which keeps them easy to manage from the Shopify admin.
 
-You’ll notice the repo has more files than strictly necessary for this exercise. I pulled this from my other projects to move faster, so a couple areas could use a bit of polishing/cleanup — but everything is working well, and I think the result stays really loyal to the original designs.
+There are a few extra files in the repo beyond what's needed for this exercise — I scaffolded this from an existing theme base to move faster. The featured products section and everything it depends on are built specifically for this task.
 
 [Store URL](https://alejos-test-store-2.myshopify.com/)
 
-Password is: taotwe
+Password: taotwe

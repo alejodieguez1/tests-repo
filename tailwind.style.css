@@ -187,14 +187,41 @@ details[open] > .content {
   @apply bg-black transition-all duration-300;
 }
 
-/* Featured Products Carousel alignment */
+/* Products Carousel */
 
-.featured-products-carousel .swiper {
-  @apply px-4 lg:px-12;
+.products-carousel-scroll {
+  @apply px-4 lg:px-12 overflow-x-auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  cursor: grab;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.products-carousel-scroll:active {
+  cursor: grabbing;
+}
+
+.products-carousel-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.products-carousel-scroll img {
+  -webkit-user-drag: none;
+  user-drag: none;
+}
+
+.products-carousel-item {
+  flex-shrink: 0;
+  width: calc((min(100vw, 1440px) - 10.5rem) / 3.8);
+}
+
+[data-carousel-track].is-active {
+  height: 6px;
 }
 
 @media screen and (min-width: 1440px) {
-  .featured-products-carousel .swiper {
+  .products-carousel-scroll {
     padding-left: calc(((100vw - 1440px) / 2) + 48px);
     padding-right: calc(((100vw - 1440px) / 2) + 48px);
   }

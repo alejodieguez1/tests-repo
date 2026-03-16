@@ -751,8 +751,8 @@ html {
   height: 3.5rem;
 }
 
-.h-2 {
-  height: 0.5rem;
+.h-3 {
+  height: 0.75rem;
 }
 
 .h-32 {
@@ -791,8 +791,8 @@ html {
   width: 4rem;
 }
 
-.w-2 {
-  width: 0.5rem;
+.w-3 {
+  width: 0.75rem;
 }
 
 .w-48 {
@@ -891,6 +891,18 @@ html {
   -webkit-user-select: none;
      -moz-user-select: none;
           user-select: none;
+}
+
+.snap-x {
+  scroll-snap-type: x var(--tw-scroll-snap-strictness);
+}
+
+.snap-mandatory {
+  --tw-scroll-snap-strictness: mandatory;
+}
+
+.snap-start {
+  scroll-snap-align: start;
 }
 
 .grid-cols-2 {
@@ -1218,6 +1230,10 @@ html {
 
 .pt-6 {
   padding-top: 1.5rem;
+}
+
+.pt-7 {
+  padding-top: 1.75rem;
 }
 
 .pt-\[100\%\] {
@@ -1985,22 +2001,54 @@ details[open] > .content {
   transition-duration: 300ms;
 }
 
-/* Featured Products Carousel alignment */
+/* Products Carousel */
 
-.featured-products-carousel .swiper {
+.products-carousel-scroll {
+  overflow-x: auto;
   padding-left: 1rem;
   padding-right: 1rem;
 }
 
 @media (min-width: 1024px) {
-  .featured-products-carousel .swiper {
+  .products-carousel-scroll {
     padding-left: 3rem;
     padding-right: 3rem;
   }
 }
 
+.products-carousel-scroll {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  cursor: grab;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+       user-select: none;
+}
+
+.products-carousel-scroll:active {
+  cursor: grabbing;
+}
+
+.products-carousel-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.products-carousel-scroll img {
+  -webkit-user-drag: none;
+  user-drag: none;
+}
+
+.products-carousel-item {
+  flex-shrink: 0;
+  width: calc((min(100vw, 1440px) - 10.5rem) / 3.8);
+}
+
+[data-carousel-track].is-active {
+  height: 6px;
+}
+
 @media screen and (min-width: 1440px) {
-  .featured-products-carousel .swiper {
+  .products-carousel-scroll {
     padding-left: calc(((100vw - 1440px) / 2) + 48px);
     padding-right: calc(((100vw - 1440px) / 2) + 48px);
   }
@@ -2040,6 +2088,10 @@ details[open] > .content {
   .custom-pl {
     padding-left: calc(((100vw - 1440px) / 2)) !important;
   }
+}
+
+.hover\:h-\[6px\]:hover {
+  height: 6px;
 }
 
 .focus\:border-blue-400:focus {
@@ -2185,20 +2237,12 @@ details[open] > .content {
     aspect-ratio: 1 / 1;
   }
 
-  .lg\:h-3 {
-    height: 0.75rem;
-  }
-
   .lg\:h-full {
     height: 100%;
   }
 
   .lg\:w-24 {
     width: 6rem;
-  }
-
-  .lg\:w-3 {
-    width: 0.75rem;
   }
 
   .lg\:w-fit {
@@ -2358,10 +2402,6 @@ details[open] > .content {
 
   .lg\:duration-500 {
     transition-duration: 500ms;
-  }
-
-  .lg\:hover\:h-\[6px\]:hover {
-    height: 6px;
   }
 
   .lg\:hover\:opacity-50:hover {

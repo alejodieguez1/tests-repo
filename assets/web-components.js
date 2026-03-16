@@ -161,7 +161,9 @@ class SiteCarousel extends HTMLElement {
     const paginationEl = this.querySelector(".swiper-pagination");
     const trackEl = this.querySelector("[data-carousel-track]");
     const thumbEl = this.querySelector("[data-carousel-thumb]");
-    const hasNavEls = this.querySelector("carousel-prev button, carousel-next button");
+    const hasNavEls = this.querySelector(
+      "carousel-prev button, carousel-next button",
+    );
     const hasPagerEls = this.querySelector("carousel-pager");
 
     const isEnabled = (attrName, fallback) => {
@@ -170,7 +172,10 @@ class SiteCarousel extends HTMLElement {
       return val === "true";
     };
 
-    const enablePagination = isEnabled("data-enable-pagination", !!paginationEl);
+    const enablePagination = isEnabled(
+      "data-enable-pagination",
+      !!paginationEl,
+    );
     const enableNav = isEnabled("data-enable-nav", !!hasNavEls);
     const enablePager = isEnabled("data-enable-pager", !!hasPagerEls);
     const enableProgress = isEnabled(
@@ -200,7 +205,8 @@ class SiteCarousel extends HTMLElement {
 
     if (enablePager) this.handleSlideChange();
     if (enableNav) this.updateNavButtons();
-    if (enableProgress) this.setupProgressBar({ enableDrag: enableProgressDrag });
+    if (enableProgress)
+      this.setupProgressBar({ enableDrag: enableProgressDrag });
 
     this.classList.remove("opacity-0");
   }
@@ -882,6 +888,7 @@ class FeaturedProductsMobile extends HTMLElement {
 
     this.classList.remove("is-open");
     this.label.textContent = "Show More";
+    this.toggle.setAttribute("aria-expanded", "false");
 
     this.toggle.addEventListener("click", this.onToggleClick);
     this.extra.addEventListener("transitionend", this.onTransitionEnd);
@@ -899,6 +906,7 @@ class FeaturedProductsMobile extends HTMLElement {
 
     this.classList.toggle("is-open", open);
     this.label.textContent = open ? "Show Less" : "Show More";
+    this.toggle.setAttribute("aria-expanded", String(open));
 
     if (open) {
       this.extra.style.height = this.extra.scrollHeight + "px";
@@ -929,3 +937,215 @@ class FeaturedProductsMobile extends HTMLElement {
 }
 
 customElements.define("featured-products-mobile", FeaturedProductsMobile);
+
+class ProductsCarousel extends HTMLElement {
+  constructor() {
+    super();
+    this.onScroll = this.onScroll.bind(this);
+    this.onResize = this.onResize.bind(this);
+    this.dragCleanup = null;
+    this.containerDragCleanup = null;
+    this._ticking = false;
+  }
+
+  connectedCallback() {
+    this.container = this.querySelector("[data-scroll-container]");
+    this.track = this.querySelector("[data-carousel-track]");
+    this.thumb = this.querySelector("[data-carousel-thumb]");
+
+    if (!this.container || !this.track || !this.thumb) return;
+
+    this.container.addEventListener("scroll", this.onScroll, {
+      passive: true,
+    });
+    this.container.addEventListener("dragstart", (e) => e.preventDefault());
+    window.addEventListener("resize", this.onResize);
+
+    this.updateProgress();
+    this.setupDrag();
+    this.setupContainerDrag();
+    this.setupWheelScroll();
+  }
+
+  disconnectedCallback() {
+    if (this.container)
+      this.container.removeEventListener("scroll", this.onScroll);
+    window.removeEventListener("resize", this.onResize);
+    if (this.dragCleanup) {
+      this.dragCleanup();
+      this.dragCleanup = null;
+    }
+    if (this.containerDragCleanup) {
+      this.containerDragCleanup();
+      this.containerDragCleanup = null;
+    }
+    if (this.wheelHandler) {
+      this.container.removeEventListener("wheel", this.wheelHandler);
+    }
+  }
+
+  onScroll() {
+    if (!this._ticking) {
+      requestAnimationFrame(() => {
+        this.updateProgress();
+        this._ticking = false;
+      });
+      this._ticking = true;
+    }
+  }
+
+  onResize() {
+    this.updateProgress();
+  }
+
+  updateProgress() {
+    const { scrollLeft, scrollWidth, clientWidth } = this.container;
+    const trackW = this.track.clientWidth;
+    const ratio = clientWidth / scrollWidth;
+    const thumbW = Math.max(24, trackW * Math.min(1, ratio));
+    this.thumb.style.width = thumbW + "px";
+
+    const maxScroll = scrollWidth - clientWidth;
+    const progress = maxScroll > 0 ? scrollLeft / maxScroll : 0;
+    const maxX = Math.max(0, trackW - thumbW);
+    this.thumb.style.transform = "translate3d(" + maxX * progress + "px,0,0)";
+  }
+
+  setupDrag() {
+    let dragging = false;
+    let dragOffset = 0;
+
+    const getMetrics = () => {
+      const trackW = this.track.clientWidth;
+      const { scrollWidth, clientWidth } = this.container;
+      const ratio = clientWidth / scrollWidth;
+      const thumbW = Math.max(24, trackW * Math.min(1, ratio));
+      const maxX = Math.max(0, trackW - thumbW);
+      const maxScroll = scrollWidth - clientWidth;
+      return { thumbW, maxX, maxScroll };
+    };
+
+    const scrubTo = (e) => {
+      const rect = this.track.getBoundingClientRect();
+      const { maxX, maxScroll } = getMetrics();
+      if (maxX <= 0 || maxScroll <= 0) return;
+      const thumbLeft = e.clientX - rect.left - dragOffset;
+      const p = Math.max(0, Math.min(1, thumbLeft / maxX));
+      this.container.scrollLeft = p * maxScroll;
+    };
+
+    const onPointerDown = (e) => {
+      dragging = true;
+      this.track.setPointerCapture?.(e.pointerId);
+      this.track.classList.add("is-active");
+
+      const rect = this.track.getBoundingClientRect();
+      const { thumbW, maxX, maxScroll } = getMetrics();
+      const progress =
+        maxScroll > 0 ? this.container.scrollLeft / maxScroll : 0;
+      const thumbLeft = maxX * progress;
+      const clickX = e.clientX - rect.left;
+
+      if (clickX >= thumbLeft && clickX <= thumbLeft + thumbW) {
+        dragOffset = clickX - thumbLeft;
+      } else {
+        dragOffset = thumbW / 2;
+        scrubTo(e);
+      }
+    };
+
+    const onPointerMove = (e) => {
+      if (!dragging) return;
+      scrubTo(e);
+    };
+
+    const onPointerUp = () => {
+      dragging = false;
+      this.track.classList.remove("is-active");
+    };
+
+    this.track.addEventListener("pointerdown", onPointerDown);
+    window.addEventListener("pointermove", onPointerMove);
+    window.addEventListener("pointerup", onPointerUp);
+
+    this.dragCleanup = () => {
+      this.track.removeEventListener("pointerdown", onPointerDown);
+      window.removeEventListener("pointermove", onPointerMove);
+      window.removeEventListener("pointerup", onPointerUp);
+    };
+  }
+
+  setupContainerDrag() {
+    let isDragging = false;
+    let startX = 0;
+    let scrollStart = 0;
+    let hasMoved = false;
+
+    const onPointerDown = (e) => {
+      if (e.pointerType === "touch" || e.button !== 0) return;
+      isDragging = true;
+      hasMoved = false;
+      startX = e.clientX;
+      scrollStart = this.container.scrollLeft;
+      this.container.style.userSelect = "none";
+    };
+
+    const onPointerMove = (e) => {
+      if (!isDragging) return;
+      const dx = e.clientX - startX;
+      if (Math.abs(dx) > 5) hasMoved = true;
+      if (hasMoved) {
+        e.preventDefault();
+        this.container.scrollLeft = scrollStart - dx;
+      }
+    };
+
+    const onPointerUp = () => {
+      if (!isDragging) return;
+      isDragging = false;
+      this.container.style.userSelect = "";
+    };
+
+    const onClick = (e) => {
+      if (hasMoved) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+    };
+
+    this.container.addEventListener("pointerdown", onPointerDown);
+    window.addEventListener("pointermove", onPointerMove);
+    window.addEventListener("pointerup", onPointerUp);
+    window.addEventListener("pointercancel", onPointerUp);
+    this.container.addEventListener("click", onClick, true);
+
+    this.containerDragCleanup = () => {
+      this.container.removeEventListener("pointerdown", onPointerDown);
+      window.removeEventListener("pointermove", onPointerMove);
+      window.removeEventListener("pointerup", onPointerUp);
+      window.removeEventListener("pointercancel", onPointerUp);
+      this.container.removeEventListener("click", onClick, true);
+    };
+  }
+
+  setupWheelScroll() {
+    this.wheelHandler = (e) => {
+      if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) return;
+      const { scrollLeft, scrollWidth, clientWidth } = this.container;
+      const maxScroll = scrollWidth - clientWidth;
+      if (maxScroll <= 0) return;
+
+      const atStart = scrollLeft <= 0 && e.deltaY < 0;
+      const atEnd = scrollLeft >= maxScroll - 1 && e.deltaY > 0;
+      if (atStart || atEnd) return;
+
+      e.preventDefault();
+      this.container.scrollLeft += e.deltaY;
+    };
+    this.container.addEventListener("wheel", this.wheelHandler, {
+      passive: false,
+    });
+  }
+}
+
+customElements.define("products-carousel", ProductsCarousel);
