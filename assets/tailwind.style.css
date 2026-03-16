@@ -893,18 +893,6 @@ html {
           user-select: none;
 }
 
-.snap-x {
-  scroll-snap-type: x var(--tw-scroll-snap-strictness);
-}
-
-.snap-mandatory {
-  --tw-scroll-snap-strictness: mandatory;
-}
-
-.snap-start {
-  scroll-snap-align: start;
-}
-
 .grid-cols-2 {
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
@@ -2004,6 +1992,10 @@ details[open] > .content {
 /* Products Carousel */
 
 .products-carousel-scroll {
+  cursor: grab;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
   overflow-x: auto;
   padding-left: 1rem;
   padding-right: 1rem;
@@ -2019,10 +2011,6 @@ details[open] > .content {
 .products-carousel-scroll {
   scrollbar-width: none;
   -ms-overflow-style: none;
-  cursor: grab;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-       user-select: none;
 }
 
 .products-carousel-scroll:active {
@@ -2030,12 +2018,7 @@ details[open] > .content {
 }
 
 .products-carousel-scroll::-webkit-scrollbar {
-  display: none;
-}
-
-.products-carousel-scroll img {
-  -webkit-user-drag: none;
-  user-drag: none;
+  display: none !important;
 }
 
 .products-carousel-item {

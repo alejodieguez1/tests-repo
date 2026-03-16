@@ -190,34 +190,26 @@ details[open] > .content {
 /* Products Carousel */
 
 .products-carousel-scroll {
-  @apply px-4 lg:px-12 overflow-x-auto;
+  @apply px-4 lg:px-12 overflow-x-auto cursor-grab select-none select-none;
   scrollbar-width: none;
   -ms-overflow-style: none;
-  cursor: grab;
-  -webkit-user-select: none;
-  user-select: none;
 }
 
 .products-carousel-scroll:active {
-  cursor: grabbing;
+  @apply cursor-grabbing;
 }
 
 .products-carousel-scroll::-webkit-scrollbar {
-  display: none;
-}
-
-.products-carousel-scroll img {
-  -webkit-user-drag: none;
-  user-drag: none;
+  @apply !hidden;
 }
 
 .products-carousel-item {
-  flex-shrink: 0;
+  @apply flex-shrink-0;
   width: calc((min(100vw, 1440px) - 10.5rem) / 3.8);
 }
 
 [data-carousel-track].is-active {
-  height: 6px;
+  @apply h-[6px];
 }
 
 @media screen and (min-width: 1440px) {
